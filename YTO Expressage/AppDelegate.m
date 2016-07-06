@@ -7,8 +7,12 @@
 //
 
 #import "AppDelegate.h"
-
+#import "CheckViewController.h"
+#import "UserViewController.h"
+#import "NearbyViewController.h"
+#import "YSerViceViewController.h"
 @interface AppDelegate ()
+@property (nonatomic, copy) void (^block)(NSString *user);
 
 @end
 
@@ -20,7 +24,149 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    UITabBarController *barControler = [[UITabBarController alloc]init];
+//    barControler.tabBar.barTintColor = [UIColor colorWithRed:91.0 / 255 green:189.0 / 255 blue:43.0 / 255 alpha:1];
+    CheckViewController *checkView = [[CheckViewController alloc]init];
+    
+    
+    
+//    创建一个本地存储字符串；
+//    static dispatch_once_t once_token;
+//    dispatch_once(&once_token, ^{
+//        
+//        NSUserDefaults *dic = [NSUserDefaults standardUserDefaults];
+//        if (dic) {
+//            [dic setObject:@"chaince" forKey:@"languge"];
+//            [dic synchronize];
+//        }
+//        
+//        NSLog(@"dskj");
+//    });
+    
+
+    
+    
+//    创建一个通知者中心；
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self selector:@selector(BlockUser:) name:@"change" object:nil];
+    
+    
+    
+    
+    
+    UINavigationController *checkBar = [[UINavigationController alloc]initWithRootViewController:checkView];
+
+    
+    
+    
+    
+   
+    UIImage *imageCheck =[UIImage imageNamed:@"checke1"];
+    imageCheck = [imageCheck imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *imageCheck1 = [UIImage imageNamed:@"checke2"];
+    imageCheck1 = [imageCheck1 imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    checkBar.tabBarItem.image = imageCheck;
+    
+    checkBar.tabBarItem.selectedImage = imageCheck1;
+    
+//    checkView.view.backgroundColor  = [UIColor blackColor];
+//    checkBar.tabBarItem.selectedImage = [UIImage imageWithCGImage:@""];
+    
+    
+    NearbyViewController *nearby = [[NearbyViewController alloc]init];
+    UINavigationController *nearbyBar = [[UINavigationController alloc]initWithRootViewController:nearby];
+    
+    
+    UIImage *imageNearby = [UIImage imageNamed:@"nearby"];
+    imageNearby = [imageNearby imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *imageNearby1 = [UIImage imageNamed:@"nearby1"];
+    imageNearby1 = [imageNearby1 imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    
+    nearbyBar.tabBarItem.image = imageNearby;
+    nearbyBar.tabBarItem.selectedImage = imageNearby1;
+    
+    
+    
+    
+    
+    
+    
+    UserViewController *userView = [[UserViewController alloc]init];
+    UINavigationController *userBar = [[UINavigationController alloc]initWithRootViewController:userView];
+    
+    UIImage *imageUser = [UIImage imageNamed:@"user"];
+    imageUser = [imageUser imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *imageUser1 = [UIImage imageNamed:@"user1"];
+    imageUser1 = [imageUser1 imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    
+    
+    userBar.tabBarItem.image = imageUser;
+    userBar.tabBarItem.selectedImage = imageUser1;
+//    userBar.toolbar.tintColor = [UIColor colorWithRed:240.0 / 255 green:188.0 / 255 blue:9.0 / 255 alpha:1];
+    
+    
+    
+    
+    YSerViceViewController *serviceView = [[YSerViceViewController alloc]init];
+    
+    UINavigationController *serviceBar = [[UINavigationController alloc]initWithRootViewController:serviceView];
+    
+   
+    void (^block)(NSString *user) = ^(NSString *user) {
+        if ([user isEqualToString:@"chaince"]) {
+             checkBar.title = @"查";
+            userBar.title = @"管理";
+            nearbyBar.title = @"附近";
+            serviceBar.title = @"服务";
+        } else {
+            checkBar.title = @"Check";
+            userBar.title = @"Manager";
+            nearbyBar.title = @"Nearby";
+            serviceBar.title = @"Service";
+            
+            
+        }
+        
+    };
+    NSUserDefaults *dic = [NSUserDefaults standardUserDefaults];
+    block([dic objectForKey:@"languge"]);
+    
+    self.block = block;
+    
+    
+    
+    UIImage *serImage = [UIImage imageNamed:@"service"];
+    serImage = [serImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    serviceBar.tabBarItem.image =serImage;
+    
+    UIImage *serImage1 = [UIImage imageNamed:@"service1"];
+   serImage1 =  [serImage1 imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    serviceBar.tabBarItem.selectedImage = serImage1;
+    
+    
+    barControler.viewControllers = @[checkBar, nearbyBar, serviceBar, userBar];
+    
+    
+    
+    
+    
+    
+    self.window.rootViewController = barControler;
+    
     return YES;
+}
+
+
+- (void)BlockUser:(NSNotification *)noi{
+    self.block(noi.object);
+    
+    
+    
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -44,87 +190,8 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
+   
 }
 
-#pragma mark - Core Data stack
-
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-
-- (NSURL *)applicationDocumentsDirectory {
-    // The directory the application uses to store the Core Data store file. This code uses a directory named "dou.come.YTO_Expressage" in the application's documents directory.
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-}
-
-- (NSManagedObjectModel *)managedObjectModel {
-    // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"YTO_Expressage" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    return _managedObjectModel;
-}
-
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it.
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
-    
-    // Create the coordinator and store
-    
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"YTO_Expressage.sqlite"];
-    NSError *error = nil;
-    NSString *failureReason = @"There was an error creating or loading the application's saved data.";
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        // Report any error we got.
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[NSLocalizedDescriptionKey] = @"Failed to initialize the application's saved data";
-        dict[NSLocalizedFailureReasonErrorKey] = failureReason;
-        dict[NSUnderlyingErrorKey] = error;
-        error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
-        // Replace this with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-    
-    return _persistentStoreCoordinator;
-}
-
-
-- (NSManagedObjectContext *)managedObjectContext {
-    // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (!coordinator) {
-        return nil;
-    }
-    _managedObjectContext = [[NSManagedObjectContext alloc] init];
-    [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    return _managedObjectContext;
-}
-
-#pragma mark - Core Data Saving support
-
-- (void)saveContext {
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil) {
-        NSError *error = nil;
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }
-}
 
 @end

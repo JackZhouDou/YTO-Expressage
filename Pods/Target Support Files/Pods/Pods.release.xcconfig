@@ -1,0 +1,9 @@
+ARCHS = $(ARCHS_STANDARD)
+EXCLUDED_SOURCE_FILE_NAMES[sdk=iphoneos*][arch=*] = ZBarReaderViewImpl_Simulator.m
+EXCLUDED_SOURCE_FILE_NAMES[sdk=iphonesimulator*][arch=*] = ZBarReaderViewImpl_Capture.m ZBarCaptureReader.m ZBarReaderViewImpl_Capture.m ZBarCaptureReader.m
+FRAMEWORK_SEARCH_PATHS = "$(PODS_ROOT)/AMap3DMap" "$(PODS_ROOT)/AMapSearch"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 NDEBUG=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AMap3DMap" "${PODS_ROOT}/Headers/Public/AMap3DMap/MAMapKit" "${PODS_ROOT}/Headers/Public/AMapSearch" "${PODS_ROOT}/Headers/Public/AMapSearch/AMapSearchKit" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/ZBarSDK"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AMap3DMap" -isystem "${PODS_ROOT}/Headers/Public/AMap3DMap/MAMapKit" -isystem "${PODS_ROOT}/Headers/Public/AMapSearch" -isystem "${PODS_ROOT}/Headers/Public/AMapSearch/AMapSearchKit" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/ZBarSDK"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"SDWebImage" -l"ZBarSDK" -l"iconv" -l"stdc++.6.0.9" -l"z" -framework "AMapSearchKit" -framework "AVFoundation" -framework "CoreGraphics" -framework "CoreLocation" -framework "CoreMedia" -framework "CoreTelephony" -framework "CoreVideo" -framework "ImageIO" -framework "MAMapKit" -framework "OpenGLES" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration"
+PODS_ROOT = ${SRCROOT}/Pods
